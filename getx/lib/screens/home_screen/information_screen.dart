@@ -5,22 +5,22 @@ import 'package:getx/resources/strings.dart';
 import 'package:getx/resources/widgets/button_widgets.dart';
 import 'package:getx/resources/widgets/input_widget.dart';
 
-class InformationPage extends StatefulWidget {
+class InformationScreen extends StatefulWidget {
   final String nameController,
       websiteController,
       zaloController,
       descriptionController;
 
-  InformationPage(
+  InformationScreen(
     this.nameController,
     this.websiteController,
     this.zaloController,
     this.descriptionController,
   );
-  _InformationPageState createState() => _InformationPageState();
+  _InformationScreenState createState() => _InformationScreenState();
 }
 
-class _InformationPageState extends State<InformationPage> {
+class _InformationScreenState extends State<InformationScreen> {
   late TextEditingController nameController,
       websiteController,
       zaloController,

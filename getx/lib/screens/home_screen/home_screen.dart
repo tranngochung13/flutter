@@ -6,7 +6,7 @@ import 'package:getx/resources/widgets/button_widgets.dart';
 import 'package:get/get.dart';
 import 'package:getx/resources/widgets/information_widget.dart';
 
-import 'information_page.dart';
+import 'information_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -106,7 +106,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   colorButton: Colors.blue,
                   colorText: Colors.white,
                   onPress: () {
-                    Get.to(InformationPage(
+                    Get.to(InformationScreen(
                       information.name,
                       information.website,
                       information.zalo,
