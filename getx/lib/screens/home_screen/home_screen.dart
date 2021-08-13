@@ -1,36 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:getx/controllers/controller.dart';
-import 'package:getx/models/information.dart';
+import 'package:getx/controllers/information.dart';
 import 'package:getx/resources/strings.dart';
-import 'package:getx/resources/widgets/button_widgets.dart';
+import 'package:getx/resources/widgets/common_widgets.dart';
 import 'package:get/get.dart';
-import 'package:getx/resources/widgets/information_widget.dart';
 
-import 'information_screen.dart';
-
-class HomeScreen extends StatefulWidget {
-  @override
-  _HomeScreenState createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  late TextEditingController nameController,
-      websiteController,
-      zaloController,
-      descriptionController;
-
+class HomeScreen extends StatelessWidget {
   final Controller controller = Get.put(Controller());
 
-  @override
-  void initState() {
-    super.initState();
-    nameController = TextEditingController();
-    websiteController = TextEditingController();
-    zaloController = TextEditingController();
-    descriptionController = TextEditingController();
-  }
-
-  void showBottomSheet() {
+  void showBottomSheet(context) {
     Get.bottomSheet(Container(
       height: 320,
       color: Colors.lightBlue,
@@ -38,25 +16,31 @@ class _HomeScreenState extends State<HomeScreen> {
         children: <Widget>[
           ListTile(
             leading: Icon(
-              Icons.book,
+              Icons.light_mode,
               color: Colors.white,
             ),
             title: Text(
-              'Book',
+              'Light theme',
               style: TextStyle(color: Colors.white),
             ),
-            onTap: () => {},
+            onTap: () => {
+              Get.changeTheme(ThemeData.light()),
+              Navigator.pop(context),
+            },
           ),
           ListTile(
             leading: Icon(
-              Icons.pending,
+              Icons.dark_mode,
               color: Colors.white,
             ),
             title: Text(
-              'pending',
+              'Dark theme',
               style: TextStyle(color: Colors.white),
             ),
-            onTap: () => {},
+            onTap: () => {
+              Get.changeTheme(ThemeData.dark()),
+              Navigator.pop(context),
+            },
           ),
         ],
       ),
@@ -70,8 +54,8 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Text(INFORMATION),
         centerTitle: true,
       ),
-      body: GetBuilder<Information>(
-        init: Information(),
+      body: GetBuilder<InformationController>(
+        init: InformationController(),
         builder: (information) {
           return Container(
             padding: EdgeInsets.all(10),
@@ -106,12 +90,27 @@ class _HomeScreenState extends State<HomeScreen> {
                   colorButton: Colors.blue,
                   colorText: Colors.white,
                   onPress: () {
-                    Get.to(InformationScreen(
-                      information.name,
-                      information.website,
-                      information.zalo,
-                      information.description,
-                    ));
+                    final name = information.name;
+                    final zalo = information.zalo;
+                    final website = information.website;
+                    final description = information.description;
+
+                    final params =
+                        "id=123&name=$name&zalo=$zalo&website=$website&description=$description";
+
+                    Navigator.of(context).pushNamed('/info?$params');
+
+                    // Navigator.of(context).pushNamed('/info', arguments: [
+                    //   '${information.name}',
+                    //   '${information.zalo}',
+                    //   '${information.website}',
+                    //   '${information.description}',
+                    // ]);
+
+                    // Navigator.of(context).pushNamed('/info', arguments: {
+                    //   'name': '${information.name}',
+                    //   'zalo': '${information.zalo}'
+                    // });
                   },
                 ),
                 buttonWidget(
@@ -119,7 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   colorButton: Colors.blue,
                   colorText: Colors.white,
                   onPress: () {
-                    showBottomSheet();
+                    showBottomSheet(context);
                   },
                 ),
                 Divider(),

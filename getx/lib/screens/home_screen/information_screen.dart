@@ -1,117 +1,113 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:getx/models/information.dart';
+import 'package:getx/controllers/information.dart';
 import 'package:getx/resources/strings.dart';
-import 'package:getx/resources/widgets/button_widgets.dart';
-import 'package:getx/resources/widgets/input_widget.dart';
+import 'package:getx/resources/widgets/common_widgets.dart';
 
-class InformationScreen extends StatefulWidget {
-  final String nameController,
-      websiteController,
-      zaloController,
-      descriptionController;
-
-  InformationScreen(
-    this.nameController,
-    this.websiteController,
-    this.zaloController,
-    this.descriptionController,
-  );
-  _InformationScreenState createState() => _InformationScreenState();
-}
-
-class _InformationScreenState extends State<InformationScreen> {
-  late TextEditingController nameController,
-      websiteController,
-      zaloController,
-      descriptionController;
-
-  @override
-  void initState() {
-    super.initState();
-    nameController = TextEditingController(text: widget.nameController);
-    websiteController = TextEditingController(text: widget.websiteController);
-    zaloController = TextEditingController(text: widget.zaloController);
-    descriptionController =
-        TextEditingController(text: widget.descriptionController);
-  }
-
-  void showSnackBar(text) {
-    final snackBar = SnackBar(
-      content: Text(text),
-      action: SnackBarAction(
-        label: 'Undo',
-        onPressed: () {},
-      ),
-      duration: Duration(seconds: 2),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
-
-  void showSnack() {
-    Get.snackbar(
-      "Infomation", // title
-      "Updated success!", // message
-      icon: Icon(Icons.update),
-      shouldIconPulse: true,
-      // onTap: () {},
-      isDismissible: true,
-      backgroundColor: Colors.amber,
-      duration: Duration(seconds: 3),
-    );
-  }
-
+class InformationScreen extends StatelessWidget {
+  final InformationController controllerInfo = Get.put(InformationController());
   @override
   Widget build(BuildContext context) {
+    // final args =
+    //     ModalRoute.of(context)!.settings.arguments as InformationScreen;
+
+    // nameController.text = Get.arguments[0];
+    // zaloController.text = Get.arguments[1];
+    // websiteController.text = Get.arguments[2];
+    // descriptionController.text = Get.arguments[3];
+    void showSnack() {
+      Get.snackbar(
+        "Infomation", // title
+        "Updated success!", // message
+        icon: Icon(Icons.update),
+        shouldIconPulse: true,
+        // onTap: () {},
+        isDismissible: true,
+        backgroundColor: Colors.amber,
+        duration: Duration(seconds: 3),
+      );
+    }
+
+    getParam(item) {
+      return Get.parameters[item];
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(INFORMATION_INPUT),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          padding: EdgeInsets.all(10),
-          child: Column(
-            children: [
-              inputWidget(
-                label: NAME,
-                hintText: NAME_INPUT,
-                controller: nameController,
-              ),
-              inputWidget(
-                label: ZALO,
-                hintText: ZALO_INPUT,
-                controller: zaloController,
-              ),
-              inputWidget(
-                label: WEBSITE,
-                hintText: WEBSITE_INPUT,
-                controller: websiteController,
-              ),
-              inputWidget(
-                label: DESCRIPTION,
-                hintText: DESCRIPTION_INPUT,
-                controller: descriptionController,
-              ),
-              buttonWidget(
-                lable: CONFIRM,
-                colorButton: Colors.blue,
-                colorText: Colors.white,
-                onPress: () {
-                  Get.put(Information()).updateInformation(
-                    name: nameController.text,
-                    zalo: zaloController.text,
-                    website: websiteController.text,
-                    description: descriptionController.text,
-                  );
+      body: GetBuilder<InformationController>(
+        init: InformationController(),
+        builder: (information) {
+          refreshField() {
+            information.nameController.text = '';
+            information.websiteController.text = '';
+            information.zaloController.text = '';
+            information.descriptionController.text = '';
+          }
 
-                  Get.back();
-                  showSnack();
-                },
-              )
-            ],
-          ),
-        ),
+          information.nameController.text = getParam('name')!;
+          information.websiteController.text = getParam('website')!;
+          information.zaloController.text = getParam('zalo')!;
+          information.descriptionController.text = getParam('description')!;
+
+          return SingleChildScrollView(
+            child: Container(
+              padding: EdgeInsets.all(10),
+              height: 400,
+              width: double.infinity,
+              child: Column(
+                children: [
+                  inputWidget(
+                    label: NAME,
+                    hintText: NAME_INPUT,
+                    controller: information.nameController,
+                  ),
+                  inputWidget(
+                    label: ZALO,
+                    hintText: ZALO_INPUT,
+                    controller: information.zaloController,
+                  ),
+                  inputWidget(
+                    label: WEBSITE,
+                    hintText: WEBSITE_INPUT,
+                    controller: information.websiteController,
+                  ),
+                  inputWidget(
+                    label: DESCRIPTION,
+                    hintText: DESCRIPTION_INPUT,
+                    controller: information.descriptionController,
+                  ),
+                  buttonWidget(
+                    lable: CONFIRM,
+                    colorButton: Colors.blue,
+                    colorText: Colors.white,
+                    onPress: () {
+                      controllerInfo.updateInformation(
+                        name: information.nameController.text,
+                        zalo: information.zaloController.text,
+                        website: information.websiteController.text,
+                        description: information.descriptionController.text,
+                      );
+
+                      // Get.put(Information()).updateInformation(
+                      //   name: information.nameController.text,
+                      //   zalo: information.zaloController.text,
+                      //   website: information.websiteController.text,
+                      //   description: information.descriptionController.text,
+                      // );
+
+                      Get.back();
+                      refreshField();
+                      showSnack();
+                    },
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }
